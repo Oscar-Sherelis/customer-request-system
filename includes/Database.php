@@ -9,17 +9,24 @@ class Database {
         
         try {
             $dsn = sprintf(
-                'mysql:host=%s;dbname=%s;charset=%s',
+                'mysql:host=%s;port=%s;dbname=%s;charset=%s',
                 $config['host'],
+                $config['port'] ?? '3306',
                 $config['database'],
                 $config['charset']
             );
             
-            $this->connection = new PDO($dsn, $config['username'], $config['password'], [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false
-            ]);
+            $this->connection = new PDO(
+                $dsn,
+                $config['username'],
+                $config['password'],
+                [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_EMULATE_PREPARES => false,
+                    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8"
+                ]
+            );
         } catch (PDOException $e) {
             die('Database connection failed: ' . $e->getMessage());
         }
@@ -34,5 +41,15 @@ class Database {
     
     public function getConnection() {
         return $this->connection;
+    }
+    
+    // Test connection
+    public function testConnection() {
+        try {
+            $this->connection->query('SELECT 1');
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
     }
 }

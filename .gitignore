@@ -1,1 +1,10 @@
 .history
+.env
+.git
+.gitignore
+.DS_Store
+.vscode
+.idea
+*.log
+*.tmp
+docker-compose.override.yml
