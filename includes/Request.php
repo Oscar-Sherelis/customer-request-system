@@ -1,4 +1,5 @@
 <?php
+// includes/Request.php
 // Request model with CRUD operations
 
 // Make sure Database class is loaded
@@ -26,8 +27,11 @@ class Request {
         }
         
         if (!empty($filters['search'])) {
-            $sql .= " AND (fullname LIKE :search OR email LIKE :search)";
-            $params[':search'] = '%' . $filters['search'] . '%';
+            // Fix: Use named placeholders correctly - one placeholder per parameter
+            $sql .= " AND (fullname LIKE :search_name OR email LIKE :search_email)";
+            $searchTerm = '%' . $filters['search'] . '%';
+            $params[':search_name'] = $searchTerm;
+            $params[':search_email'] = $searchTerm;
         }
         
         $sql .= " ORDER BY 
