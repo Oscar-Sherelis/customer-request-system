@@ -5,7 +5,14 @@ class Database {
     private $connection;
     
     private function __construct() {
-        $config = require_once __DIR__ . '../config/database.php';
+
+            $configPath = __DIR__ . '/../config/database.php';
+        
+        if (!file_exists($configPath)) {
+            die('Configuration file not found: ' . $configPath);
+        }
+
+        $config = require_once $configPath;
         
         try {
             $dsn = sprintf(
